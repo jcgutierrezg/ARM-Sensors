@@ -1,0 +1,13 @@
+﻿- Primero debe tener el código de Teams que se llama "rpi_camera_streaming.py"
+
+
+- Luego en consola debe correr dicho script con python3: $ pyhton3 rpi_camera_streaming.py 
+
+- Seguidamente, en otra máquina, se podrá ver el streaming en la dirección: http://rpi-address:8000/
+
+**NOTA:
+- Para que la cámara sea reconocida al momento de ejecutar el script, debe tenerse conectada cuando 
+la raspberry encienda. En caso de que haya encendido la raspberry sin tener conectada la cámara, deberá conectarla y reiniciar la raspberry
+
+- Para mpas información acerca del código de la cámara y el script para el streaming, se pueden visitar el siguiente link:
+https://picamera.readthedocs.io/en/release-1.13/recipes2.html#web-streaming

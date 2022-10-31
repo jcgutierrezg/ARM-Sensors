@@ -1,0 +1,13 @@
+Intrucciones:
+
+- Crear el hotspot: 
+SSID: RobocolURC
+PSWD: Robocol8102
+
+- Conectar los elementos a la caja guiandose de los esquemáticos
+
+- Conectar la alimentación UNICAMENTE cuando ya esté todo lo demás bien conectado
+
+- Conectarse a la raspberry en la misma red mirando la IP, el usuario es "pi" y la contraseña es "326435"
+
+- Correr los nodos correspondientes y publicar los tópicos para hacer que se muevan los actuadores y ver el echo de los sensores 

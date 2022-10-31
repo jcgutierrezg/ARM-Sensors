@@ -1,0 +1,53 @@
+﻿- Primero debe instalar la librería serial de ros desde la fuente:
+
+cd <ws>/src
+git clone https://github.com/ros-drivers/rosserial.git
+
+cd <ws>
+
+catkin_make
+
+catkin_make install
+
+source devel/setup.bash
+
+
+##### sudo apt-get install ros-melodic-rosserial-arduino #### Este comando no funciona en la raspberry
+
+
+
+- Después debe correr el roscore:
+ 
+roscore
+
+
+
+- Luego correr el nodo en el workspace donde tiene el paquete de rosserial:
+
+rosrun rosserial_arduino serial_node.py _port:=/dev/tty(Aquí va el nombre del puerto) ## con este funcionó bien
+o
+rosrun rosserial_python serial_node.py /dev/tty(Aquí va el nombre del puerto)
+
+ ## este me seguía generando problemas
+
+- Nota: 
+
+Para poder programar el arduino desde el computador en Windows, se debe instalar el driver desde https://ftdichip.com/drivers/vcp-drivers/
+En Ubuntu solo se debe seleccionar la opción en el "Processor" -> ATmega328 (Old Bootloader)
+
+Si no se tienen los permisos del puerto USB:
+
+ls -l /dev | grep ACM
+
+sudo chmod 777 /dev/tty(Aquí va el nombre del puerto)
+
+
+
+En mi caso me surgió un error porque la librería "queue" no estaba instalada, para instalarla:
+
+lo que hice fue cambiar en el código del rosserial_python SerialClient.py la línea "import queue" por "import Queue as queue"
+
+Para cambiar nombre de nodo se debe editar "rospy.init_node()" en el archivo "serial_node.py" de la carpeta de rosserial_arduino
+
+- Finalmente, ya puede correr el nodo serial de arduino
+

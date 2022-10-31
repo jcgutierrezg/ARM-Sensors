@@ -1,0 +1,68 @@
+Instrucciones para instalación de ROS MELODIC en una Raspberry Pi Zero /W:
+
+// Este archivo explica el proceso para la instalación de ROS Melodic en una Raspberry Pi Zero /W
+El método usado realiza una compilación directa de ROS desde la fuente en la raspberry, por lo que es un proceso bastante demorado
+NOTA1: no desconectar ni apagar la raspberry durante el proceso de instalación 
+NOTA1: para apagar la rapsberry SIEMPRE usar el comando: $ sudo shutdown -h now//
+
+
+1. Instalación del sistema operativo en la raspberry:
+- Primero se debe instalar el sistema operativo en la raspberry: Para esto descargue el generador ISO de la página oficial de raspberry (xxxxx)
+- Una vez descargado el programa, ejecutarlo, introducir la microSD, y en el programa seleccionar la memoria y el sistema operativo recomendado (RaspberrypiOS)
+- Después de generada la imagen ISO con el programa, expulse la memoria y vuelva a conectarla, agregue los archivos de configuración para conectarse a la red de internet que corresponda y la comunicarse por ssh (https://youtu.be/I1CgRUPZ-9s - tutorial Franz)
+
+
+2. Acceder reomotamente a la raspbery mediante Putty por ssh:
+- Descargue Putty de la página oficial (xxxx) y abra el programa
+- Inserte la microSD en la raspberry, conectela a la energía y espere unos segundos hasta que esté lista para funcionar
+- Revise que la raspberry esté conectada a la red y tenga en cuenta su dirección IP (se va a necesitar después)
+- En Putty, introduzca la IP de la raspberry, seleccione ssh y presione "Open"
+- Una vez conectado por ssh a la consola de la raspberry, le pedirá usuario y contraseña, por defecto, el usuario es 'pi' y la constraseña es 'raspberry'
+- Con esto ya tiene acceso a la raspberry y puede manejarla desde consola
+
+
+2. Acceder remotamente a la raspberry mediante el VNC viewer:
+Trabajar con una interfaz gráfica es mucho más sencillo en ocasiones, por eso manejamos el VNC
+- Instalar VNC Viewer (de www.realvnc.com)
+- En la consola de la raspberry por Putty corres el comando: $ raspi config y habilitar todos los periféricos necesarios junto con el servidor VNC y cámara, luego reiniciar si no se solicita al terminar la habilitación (preguntar a Jhoan para esta configuración $ sudo reboot) 
+- Una vez instalado VNC Viewer se procede a conectarse con la raspberry ingresando la IP correspondiente
+- Si todo está correcto, se le pedirá de nuevo usuario y contraseña y ya podrá ingresar al entorno gráfico de la raspberry
+
+
+3. Instalación de ROS Melodic:
+Utilizando la terminal de la raspberry, introducir los siguientes comandos uno a uno:  
+sudo apt update
+sudo apt install -y python-rosdep python-rosinstall-generator python-wstool python-rosinstall build-essential git curl
+sudo rosdep init
+rosdep update
+sudo mkdir -p /usr/src/ros/melodic
+sudo chown -R $USER:$USER /usr/src/ros
+cd /usr/src/ros/melodic
+rosinstall_generator robot --rosdistro melodic --deps --tar > melodic-robot.rosinstall
+wstool init -j1 src melodic-robot.rosinstall
+rosdep install --from-paths src --ignore-src --rosdistro melodic -y
+sudo mkdir -p /opt/ros/melodic
+echo 'sudo ./src/catkin/bin/catkin_make_isolated --install -DCMAKE_BUILD_TYPE=Release  --install-space /opt/ros/melodic -j1' > install.sh
+bash ./install.sh
+echo "source /opt/ros/melodic/setup.bash" >> ~/.bashrc
+
+
+4. Reiniciar la Raspberry con $ sudo reboot y volver a acceder a la raspberry con el VNC
+
+
+5. Solución de posibles problemas:
+
+* Si al ejecutar el comando $ bash ./install.sh se obtiene un problema por el módulo python-empy, se debe instalar lo siguiente:
+$ sudo apt-get install -y python-empy
+y luego volver a correr el comando $ bash ./install.sh  
+
+* Si hay problemas para correr el roscore por los modulos defusedxml y netifaces, se debe instalar lo siguiente:
+$ sudo apt-get install python-defusedxml
+$ pip install netifaces
+y luego volver a correr el roscore
+
+* Si hay problemas para correr los comandos de ros (i.e rostopic, rosservice, rosnode, etc), se deben instalar los siguientes modulos: 
+$ sudo pip install pycryptodomex
+$ pip install gnupg
+
+
